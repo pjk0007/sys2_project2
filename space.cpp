@@ -9,4 +9,22 @@ space::space()
 	end_Time = 24;
 }
 
+int space::getST()
+{
+	return start_Time;
+}
 
+int space::getET()
+{
+	return end_Time;
+}
+
+int space::getBT()
+{
+	return borrowed_Time;
+}
+
+int space::getRT()
+{
+	return return_Time;
+}

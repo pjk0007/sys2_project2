@@ -23,6 +23,7 @@ library::library()
 	FILE* fp;
 	FILE* fq;
 	int year1, month1, day1, year2, month2, day2, hour;
+	int date1, date2;
 	int year, month, day, i;
 	int cnt=1, exist=0;
 	int b_year, b_month, b_day;
@@ -37,7 +38,8 @@ library::library()
 	int Number_of_member;
 	int Time;
 
-	int file_end1, file_end2;
+	int file_end1=1, file_end2=1;
+	int file_exist1, file_exist2;
 	
 
 	fp = fopen("resource.dat", "r");
@@ -56,22 +58,33 @@ library::library()
 	}
 	fclose(fp);
 
-	fp = fopen("input.dat", "r");
-	for(i=0;i<6;i++){
-		fscanf(fp, "%s", buf1);
+	if(fp = fopen("input.dat", "r")){
+		file_exist1=1;
+		for(i=0;i<6;i++){
+			fscanf(fp, "%s", buf1);
+		}
+	}
+	else {
+		file_end1=0;
+		file_exist1=0;
 	}
 
-	fq = fopen("space.dat", "r");
-	for(i=0;i<8;i++){
-		fscanf(fq, "%s", buf3);
+	if(fq = fopen("space.dat", "r")){
+		file_exist2=1;
+		for(i=0;i<8;i++){
+			fscanf(fq, "%s", buf3);
+		}
+	}
+	else {
+		file_end2=0;
+		file_exist2=0;
 	}
 
 	cout << "Op_#	Return_code	Description"<<endl;
 	while(1)
 	{
-		cout << cnt << "	";
 		
-		if(file_end1=fscanf(fp, "%s", buf1)!=EOF)
+		if(file_end1==1 && fscanf(fp, "%s", buf1)>0)
 		{
 			buf2[0]=buf1[0];
 			buf2[1]=buf1[1];
@@ -88,8 +101,9 @@ library::library()
 			buf2[2]='\0';
 			day1 = atoi(buf2);
 		}
+		else file_end1=0;
 
-		if(file_end2=fscanf(fq, "%s", buf3)!=EOF)
+		if(file_end2==1 && fscanf(fq, "%s", buf3)>0)
 		{
 			buf4[0]=buf3[0];
 			buf4[1]=buf3[1];
@@ -108,9 +122,12 @@ library::library()
 			buf4[2]='\0';
 			day2 = atoi(buf4);
 		}
-
+		else file_end2=0;
+		date1 = year1*360+month1*12+day1;
+		date2 = year2*360+month2*12+day2;
 		if(file_end1<1 && file_end2<1) break;
-		else if(year1*360+month1*12+day1 <= year2*360+month2*12+day2 || file_end2<1){ 
+		cout << cnt << "	";
+		if((date1 <= date2 && file_end1>0) || file_end2<1){ 
 			year = year1;
 			month = month1;
 			day = day1;
@@ -226,7 +243,7 @@ library::library()
 				}
 			}
 		}
-		else if(year1*360+month1*12+day1 > year2*360+month2*12+day2 || file_end1<1){ 
+		else if((date1 > date2 && file_end2>0) || file_end1<1){ 
 			year = year2;
 			month = month2;
 			day = day2;
@@ -284,6 +301,8 @@ library::library()
 
 		cnt++;
 	}
-	fclose(fp);
-	fclose(fq);
+	if(file_exist1==1)
+		fclose(fp);
+	if(file_exist2==1)
+		fclose(fq);
 }

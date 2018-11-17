@@ -14,6 +14,10 @@ class space
 		
 	public:
 		space();
+		int getST();
+		int getET();
+		int getBT();
+		int getRT();
 };
 
 class study_room : public space

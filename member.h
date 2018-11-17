@@ -19,7 +19,9 @@ class member
 		int room_time_limit;
 		int seat_time_limit;
 		int room;	// already borrowed 1, no borrowed 0
+		int room_num;	// if you borrowed room,you borrowed this room
 		int seat;	// already borrowd 1, no borrowed 0
+		int seat_num;	// if you borrowed seat,you borrowed this seat
 
 		
 	public:
@@ -36,9 +38,11 @@ class member
 		void setDay(int d);
 		int borrow(int n_y, int n_m, int n_d);
 		void giveBack();
-
+		
 		int getRoom();
 		int getSeat();
+		int borrow(string Space_type);
+		int getBack(string Space_type, int Space_number);
 };
 
 class undergraduate : public member
