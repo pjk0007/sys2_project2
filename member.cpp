@@ -11,6 +11,9 @@ member::member(string mn, string T)
 	ban_year=0;
 	ban_month=0;
 	ban_day=0;
+	room_time_limit=3;
+	room = 0;
+	seat = 0;
 }
 
 string member::getName()
@@ -62,6 +65,16 @@ void member::setMonth(int m)
 void member::setDay(int d)
 {
 	ban_day = d;
+}
+
+int member::getRoom()
+{
+	return room;//0:not borrow, 1:already borrow
+}
+
+int member::getSeat()
+{
+	return seat;//0:not borrow, 1:already borrow
 }
 
 int member::borrow(int n_y, int n_m, int n_d)
