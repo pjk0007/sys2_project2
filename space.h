@@ -18,9 +18,11 @@ class space
 		int getST();
 		int getET();
 		int getRT();
-		int Return();
+		int Borrow(string memName, int hour, int nom, int time, int lilmit);
+		int Return(string memName, int hour);
 		int Empty();
 		int Comeback();
+		void reset();
 			
 };
 
@@ -34,8 +36,12 @@ class study_room : public space
 			end_Time = 18;
 			return_Time = 0;
 			max_Num=6;
+			user="0";
 		}
-		int borrow(string memName, int hour, int nom, int time, int lilmit);
+		void reset();
+		int Borrow(string memName, int hour, int nom, int time, int lilmit);
+		int Return(string memName, int hour);
+		
 };
 
 class seat : public space
@@ -60,6 +66,8 @@ class seat : public space
 			
 		}
 		void time_limit(int st, int et);
-		int borrow(string memName, int hour, int nom, int time, int lilmit);
+		int Borrow(string memName, int hour, int nom, int time, int lilmit);
+		int Return(string memName, int hour);
+		void reset();
 };
 #endif

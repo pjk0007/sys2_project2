@@ -109,6 +109,16 @@ int member::getSeat_Time(){
 	return seat_time;
 }
 
+void member::Reset()
+{
+	room=0;
+	seat=0;
+	room_num=0;
+	seat_num=0;
+	room_time=0;
+	seat_time=0;
+}
+
 void member::Borrow(string Space_type, int Space_number, int return_time)
 {
 	if(Space_type=="StudyRoom"){

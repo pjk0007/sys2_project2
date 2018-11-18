@@ -24,7 +24,13 @@ int space::getRT()
 	return return_Time;
 }
 
-int study_room::borrow(string memName, int hour, int nom, int time, int limit)
+void study_room::reset()
+{
+	return_Time = 0;
+	user="0";
+}
+
+int study_room::Borrow(string memName, int hour, int nom, int time, int limit)
 {
 	if(hour < start_Time || hour > end_Time) return 9;
 	if(nom>max_Num || nom<1) return 12;
@@ -37,7 +43,30 @@ int study_room::borrow(string memName, int hour, int nom, int time, int limit)
 	return 0;
 }
 
-int seat::borrow(string memName, int hour, int nom, int time, int limit)
+int study_room::Return(string memName, int hour)
+{
+	if(memName != user) return 10;
+	if(hour > return_Time) return 10;
+
+	user = "0";
+	return_Time=0;
+
+	return 0;
+}
+
+void seat::reset()
+{
+	return_Time = 0;
+	remain = 0;
+	for(int i=0;i<50;i++){
+		memname[i] = "0";
+	}
+	for(int i=0;i<50;i++){
+		endtime[i] = 0;
+	}
+}
+
+int seat::Borrow(string memName, int hour, int nom, int time, int limit)
 {
 	remain=0;
 	for(int i=0;i<50;i++){
@@ -61,6 +90,18 @@ int seat::borrow(string memName, int hour, int nom, int time, int limit)
 
 
 	return 0;
+}
+
+int seat::Return(string memName, int hour)
+{
+	if(memName != user) return 10;
+	if(hour > return_Time) return 10;
+
+	user = "0";
+	return_Time=0;
+
+	return 0;
+
 }
 
 void seat::time_limit(int st, int et){
