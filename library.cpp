@@ -70,7 +70,7 @@ library::library()
 		file_exist1=0;
 	}
 
-	if(fq = fopen("space.dat", "r")){
+	if(fq = fopen("space1.dat", "r")){
 		file_exist2=1;
 		for(i=0;i<8;i++){
 			fscanf(fq, "%s", buf3);
@@ -353,12 +353,12 @@ library::library()
 				
 				if(Op==8) cout<< "8	Invalid space id." << endl;
 				else if(Op==9) {
-					cout << "9	This space is not avaliable now. Avaliable from "; 
+					cout << "9	This space is not available now. Available from "; 
 					cout << setw(2) << setfill('0') << Op1 << " to ";
 					cout << setw(2) << setfill('0') << Op2 <<"."<<endl;	
 				}
 				else if(Op_==11) cout <<"11	You already borrowed this kind of space."<<endl;
-				else if(Op==12) cout << "11	Exceed available number." <<endl;
+				else if(Op==12) cout << "12	Exceed available number." <<endl;
 				else if(Op==13) cout << "13	Exceed available time."<<endl;
 				else if(Op==14) cout << "14	There is no remain space. This space is available after "<< Op1<<"."<<endl;
 				else if(Op==0){
@@ -379,22 +379,27 @@ library::library()
 
 				if(Op==8) cout << "8	Invalid space id." <<endl;
 				else if(Op==10) cout << "10	You did not borrow this space." << endl;
-				else if(Op==0) cout << "Success." <<endl;
+				else if(Op==0) cout << "0	Success." <<endl;
 			}
 			else if(Operation=='E'){
-				else if(Space_type=="Seat" && Space_number>=1 && Space_number<=3){
-
+				if(Space_type=="Seat" && Space_number>=1 && Space_number<=3){
+					Op=seats[Space_number].Empty(memName, hour);	
 				}
 				else Op=8;
+
+				if(Op==8) cout << "8	Invalid space id." <<endl;
+				else if(Op==10) cout << "10	You did not borrow this space." << endl;
+				else if(Op==0) cout << "0	Success." <<endl;
 			}
 			else if(Operation=='C'){
-				if(Space_type=="StudyRoom" && Space_number>=1 && Space_number<=10){
-
-				}
-				else if(Space_type=="Seat" && Space_number>=1 && Space_number<=3){
-
+				if(Space_type=="Seat" && Space_number>=1 && Space_number<=3){
+					Op=seats[Space_number].Comeback(memName, hour);	
 				}
 				else Op=8;
+
+				if(Op==8) cout << "8	Invalid space id." <<endl;
+				else if(Op==10) cout << "10	You did not borrow this space." << endl;
+				else if(Op==0) cout << "0	Success." <<endl;
 			}
 		}
 

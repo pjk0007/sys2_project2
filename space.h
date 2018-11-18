@@ -11,7 +11,6 @@ class space
 		int end_Time;
 		int return_Time;
 		int max_Num;
-		string user;
 		
 	public:
 		space();
@@ -20,8 +19,6 @@ class space
 		int getRT();
 		int Borrow(string memName, int hour, int nom, int time, int lilmit);
 		int Return(string memName, int hour);
-		int Empty();
-		int Comeback();
 		void reset();
 			
 };
@@ -29,6 +26,7 @@ class space
 class study_room : public space
 {
 	protected:
+		string user;
 
 	public :
 		study_room() : space(){
@@ -50,6 +48,7 @@ class seat : public space
 		int remain;	// maximum 50 seats
 		string memname[50];
 		int endtime[50];
+		int emptytime[50];
 
 	public :
 		seat() : space(){
@@ -63,11 +62,17 @@ class seat : public space
 			for(int i=0;i<50;i++){
 				endtime[i]=0;
 			}
+			for(int i=0;i<50;i++){
+				emptytime[i]=0;
+			}
+			
 			
 		}
 		void time_limit(int st, int et);
 		int Borrow(string memName, int hour, int nom, int time, int lilmit);
 		int Return(string memName, int hour);
+		int Empty(string memName, int hour);
+		int Comeback(string memName, int hour);
 		void reset();
 };
 #endif
