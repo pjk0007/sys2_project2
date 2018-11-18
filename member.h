@@ -16,12 +16,13 @@ class member
 		int ban_day;
 		int term;
 
-		int room_time_limit;
 		int seat_time_limit;
 		int room;	// already borrowed 1, no borrowed 0
-		int room_num;	// if you borrowed room,you borrowed this room
+		int room_num;
 		int seat;	// already borrowd 1, no borrowed 0
-		int seat_num;	// if you borrowed seat,you borrowed this seat
+		int seat_num;
+		int room_time;
+		int seat_time;
 
 		
 	public:
@@ -38,11 +39,18 @@ class member
 		void setDay(int d);
 		int borrow(int n_y, int n_m, int n_d);
 		void giveBack();
+		int getTimeLimit();
 		
 		int getRoom();
+		int getRoom_num();
 		int getSeat();
-		int borrow(string Space_type);
-		int getBack(string Space_type, int Space_number);
+		int getSeat_num();
+		int getRoom_Time();
+		int getSeat_Time();
+		void Borrow(string Space_type, int Space_number, int return_time);
+		int Return(string Space_type, int Space_number);
+		int Empty();
+		int Comeback();
 };
 
 class undergraduate : public member

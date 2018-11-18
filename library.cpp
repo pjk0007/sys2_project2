@@ -14,9 +14,10 @@ library::library()
 	resource* tempRes;
 	member* tempMem;
 	study_room study_rooms[11];
-	seat seat1 = seat(0, 24);
-	seat seat2 = seat(9, 21);
-	seat seat3 = seat(9, 18);
+	seat seats[4];
+	seats[1].time_limit(0, 24);
+	seats[2].time_limit(9, 21);
+	seats[3].time_limit(9, 18);
 
 	char input1[100], input2[100];
 	char buf1[100], buf2[100], buf3[100], buf4[100];
@@ -37,6 +38,7 @@ library::library()
 	char Operation;
 	int Number_of_member;
 	int Time;
+	int Op, Op_;
 
 	int file_end1=1, file_end2=1;
 	int file_exist1, file_exist2;
@@ -102,7 +104,6 @@ library::library()
 			day1 = atoi(buf2);
 		}
 		else file_end1=0;
-
 		if(file_end2==1 && fscanf(fq, "%s", buf3)>0)
 		{
 			buf4[0]=buf3[0];
@@ -121,12 +122,21 @@ library::library()
 			buf4[1]=buf3[9];
 			buf4[2]='\0';
 			day2 = atoi(buf4);
+
+			buf4[0]=buf3[11];
+			buf4[1]=buf3[12];
+			buf4[2]='\0';
+			hour = atoi(buf4);
 		}
 		else file_end2=0;
+
 		date1 = year1*360+month1*12+day1;
-		date2 = year2*360+month2*12+day2;
+		date2 = (year2%100)*360+month2*12+day2;
+
 		if(file_end1<1 && file_end2<1) break;
+
 		cout << cnt << "	";
+
 		if((date1 <= date2 && file_end1>0) || file_end2<1){ 
 			year = year1;
 			month = month1;
@@ -258,19 +268,12 @@ library::library()
 			Operation = buf3[0];
 			fscanf(fq, "%s", buf3);
 			memType = buf3;
-			fscanf(fq, "%s", buf3);
-			memName = buf3;
-
-			if(Operation=='B'){
-				fscanf(fq, "%s", buf3);
-				Number_of_member = atoi(buf3);
-				fscanf(fq, "%s", buf3);
-				Time = atoi(buf3);
-			}
-
+			fscanf(fq, "%s", buf4);
+			memName = buf4;
+			
 			if(MEMLIST.size()==0){
 				if(memType=="Undergraduate"){
-					MEMLIST.push_back(new undergraduate(memName, memType));
+					MEMLIST.push_back(new undergraduate(buf4, buf3));
 				}
 				tempMem = MEMLIST.back();
 			}
@@ -282,7 +285,7 @@ library::library()
 					}
 					else if(i==MEMLIST.size()-1){
 						if(memType=="Undergraduate"){
-							MEMLIST.push_back(new undergraduate(memName, memType));
+							MEMLIST.push_back(new undergraduate(buf4, buf3));
 						}
 						tempMem = MEMLIST.back();
 					}
@@ -290,12 +293,85 @@ library::library()
 			}
 
 			if(Operation=='B'){
+				fscanf(fq, "%s", buf3);
+				Number_of_member = atoi(buf3);
+				fscanf(fq, "%s", buf3);
+				Time = atoi(buf3);
+			}
+
+			Op=0;
+			Op_=0;
+
+			int Op1, Op2;
+			if(Operation=='B'){
+				if(Space_type=="StudyRoom" && Space_number>=1 && Space_number<=10){
+					Op=study_rooms[Space_number].borrow(memName, hour, Number_of_member, Time, 3);
+					if(tempMem->getRoom()==1 && tempMem->getRoom_Time()>hour) Op_=11;
+					if(Op==9){
+						Op1 = study_rooms[Space_number].getST();
+						Op2 = study_rooms[Space_number].getET();
+					}
+					else if(Op==14){
+						Op1 = study_rooms[Space_number].getRT();
+					}
+				}
+				else if(Space_type=="Seat" && Space_number>=1 && Space_number<=3){
+					Op=seats[Space_number].borrow(memName, hour, Number_of_member, Time, tempMem->getTimeLimit());
+					if(tempMem->getSeat()==1 && tempMem->getSeat_Time()>hour) Op_=11;
+					if(Op==9){
+						Op1 = seats[Space_number].getST();
+						Op2 = seats[Space_number].getET();
+					}
+					else if(Op==14){
+						Op1 = seats[Space_number].getRT();
+					}
+				}
+				else Op=8;
+
+				
+				if(Op==8) cout<< "8	Invalid space id." << endl;
+				else if(Op==9) {
+					cout << "9	This space is not avaliable now. Avaliable from "; 
+					cout << setw(2) << setfill('0') << Op1 << " to ";
+					cout << setw(2) << setfill('0') << Op2 <<"."<<endl;	
+				}
+				else if(Op_==11) cout <<"11	You already borrowed this kind of space."<<endl;
+				else if(Op==12) cout << "11	Exceed available number." <<endl;
+				else if(Op==13) cout << "13	Exceed available time."<<endl;
+				else if(Op==14) cout << "14	There is no remain space. This space is available after "<< Op1<<"."<<endl;
+				else if(Op==0){
+					tempMem->Borrow(Space_type, Space_number, hour+Time);
+				       	cout << "0	Success." <<endl;
+				}
+
+
 			}
 			else if(Operation=='R'){
+				if(Space_type=="StudyRoom" && Space_number>=1 && Space_number<=10){
+
+				}
+				else if(Space_type=="Seat" && Space_number>=1 && Space_number<=3){
+
+				}
+				else Op=8;
 			}
 			else if(Operation=='E'){
+				if(Space_type=="StudyRoom" && Space_number>=1 && Space_number<=10){
+
+				}
+				else if(Space_type=="Seat" && Space_number>=1 && Space_number<=3){
+
+				}
+				else Op=8;
 			}
 			else if(Operation=='C'){
+				if(Space_type=="StudyRoom" && Space_number>=1 && Space_number<=10){
+
+				}
+				else if(Space_type=="Seat" && Space_number>=1 && Space_number<=3){
+
+				}
+				else Op=8;
 			}
 		}
 
