@@ -81,15 +81,20 @@ int seat::Borrow(string memName, int hour, int nom, int time, int limit)
 	if(limit < time || time < 1) return 13;
 	if(remain > 49) return 14;
 	
+	
+	return_Time = hour+time;
+	for(int i=0;i<50;i++){
+		if(endtime[i]>hour && return_Time>endtime[i])
+			return_Time = endtime[i];
+	}
+
 	for(int i=0;i<50;i++){
 		if(memname[i]=="0"){
 			memname[i]=memName;
 			endtime[i]=hour+time;
+			return 0;
 		}
 	}
-
-
-	return 0;
 }
 
 int seat::Return(string memName, int hour)
