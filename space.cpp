@@ -101,7 +101,7 @@ int seat::Return(string memName, int hour)
 {
 	for(int i=0;i<50;i++){
 		if(memname[i]==memName){
-			if(hour <= endtime[i]) return 0;
+			if(hour < endtime[i]) return 0;
 		}
 	}
 

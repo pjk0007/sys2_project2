@@ -371,9 +371,11 @@ library::library()
 			else if(Operation=='R'){
 				if(Space_type=="StudyRoom" && Space_number>=1 && Space_number<=10){
 					Op=study_rooms[Space_number].Return(memName, hour);
+					tempMem->Return(Space_type);
 				}
 				else if(Space_type=="Seat" && Space_number>=1 && Space_number<=3){
 					Op=seats[Space_number].Return(memName, hour);
+					tempMem->Return(Space_type);
 				}
 				else Op=8;
 
@@ -383,7 +385,8 @@ library::library()
 			}
 			else if(Operation=='E'){
 				if(Space_type=="Seat" && Space_number>=1 && Space_number<=3){
-					Op=seats[Space_number].Empty(memName, hour);	
+					Op=seats[Space_number].Empty(memName, hour);
+					if(Op==0) tempMem->Empty(Space_type, hour);	
 				}
 				else Op=8;
 
@@ -394,6 +397,7 @@ library::library()
 			else if(Operation=='C'){
 				if(Space_type=="Seat" && Space_number>=1 && Space_number<=3){
 					Op=seats[Space_number].Comeback(memName, hour);	
+					if(Op==0) tempMem->Comeback(Space_type);	
 				}
 				else Op=8;
 

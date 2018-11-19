@@ -132,3 +132,29 @@ void member::Borrow(string Space_type, int Space_number, int return_time)
 		seat_time=return_time;
 	}
 }
+
+void member::Return(string Space_type)
+{
+	if(Space_type=="StudyRoom"){
+		room = 0;
+		room_num=0;
+		room_time=0;
+	}
+	else if(Space_type=="Seat"){
+		seat = 0;
+		seat_num=0;
+	}
+
+}
+
+void member::Empty(string Space_type, int hour)
+{
+	empty_time = seat_time;
+	seat_time = hour+1;
+}
+
+void member::Comeback(string Space_type)
+{
+	seat_time = empty_time;
+	empty_time = 0;
+}

@@ -23,6 +23,7 @@ class member
 		int seat_num;
 		int room_time;
 		int seat_time;
+		int empty_time;
 
 		
 	public:
@@ -48,9 +49,9 @@ class member
 		int getRoom_Time();
 		int getSeat_Time();
 		void Borrow(string Space_type, int Space_number, int return_time);
-		int Return(string Space_type, int Space_number);
-		int Empty();
-		int Comeback();
+		void Return(string Space_type);
+		void Empty(string Space_type, int hour);
+		void Comeback(string Spce_type);
 		void Reset();
 };
 
