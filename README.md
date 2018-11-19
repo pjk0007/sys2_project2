@@ -1,10 +1,10 @@
 # System Software Experiment 3
 ## Project 1: Library Management
 ### Profect dexcription
- This program reads the `resource.dat` and `input.dat` files from the library class and processes them according to the order of the input and generates output.
+ This program reads the `resource.dat` and `input.dat` and `space.dat` files from the library class and processes them according to the order of the input and generates output.
 The main function only generated the library and the function that generates the library reads the file and stores and processes the data.
 First, read the file `resource.dat` and save the contents of the data to the Vector declared as resource data type.
-Read the `input.dat` file to store the vector declared as the member data type and process the input order using the information of each vector.
+Read the `input.dat` file and `space.dat` file to store the vector declared as the member data type and process the input order using the information of each vector.
 
 Getting started
 -----
@@ -14,7 +14,7 @@ Required data files include `resource.dat` and `input.dat`.
 ### How to compile
 You can compile in two ways. The first method is as follows.
 ```
-$ g++ -std=c++11 -o start main.cpp library.cpp resource.cpp member.cpp
+$ g++ -std=c++11 -o start main.cpp library.cpp resource.cpp member.cpp space.cpp
 ```
 Other methods can be made through `Makefile`.
 ```
@@ -130,6 +130,15 @@ class member
 		int ban_month;	// you can borrow after ban_month
 		int ban_day;	// you can borrow after ban_day
 		int term;		
+
+		int seat_time_limit;
+		int room;	// already borrowed 1, no borrowed 0
+		int room_num;
+		int seat;	// already borrowd 1, no borrowed 0
+		int seat_num;
+		int room_time;
+		int seat_time;
+		int empty_time;
 	public:
 		member(string mn, string T);	//initialize
 		string getName();
@@ -144,13 +153,25 @@ class member
 		void setDay(int d);
 		int borrow(int n_y, int n_m, int n_d);
 		void giveBack();
+
+		int getRoom();
+		int getRoom_num();
+		int getSeat();
+		int getSeat_num();
+		int getRoom_Time();
+		int getSeat_Time();
+		void Borrow(string Space_type, int Space_number, int return_time);
+		void Return(string Space_type);
+		void Empty(string Space_type, int hour);
+		void Comeback(string Spce_type);
+		void Reset();
 };
 ```
 
 ```
 member::member(string mn, string T)
 ```
-Creadte and initialize a member of type `member`
+Create and initialize a member of type `member`
 
 ```
 int member::borrow(int n_y, int n_m, int n_d)
@@ -168,6 +189,63 @@ void member::giveBack()
 This function is called when the giveback something is successful.
 Reduce `nowBorrow` by one as shown above.
 
+```
+void member::Borrow(string Space_type, int Space_number, int return_time)
+{
+	if(Space_type=="StudyRoom"){
+		room = 1;
+		room_num=Space_number;
+		room_time=return_time;
+	}
+	else if(Space_type=="Seat"){
+		seat = 1;
+		seat_num=Space_number;
+		seat_time=return_time;
+	}
+}
+```
+This function is a function that is called when you try to borrow a space, and that is success.
+Store "where space and when" in member information.
+
+```
+void member::Return(string Space_type)
+{
+	if(Space_type=="StudyRoom"){
+		room = 0;
+		room_num=0;
+		room_time=0;
+	}
+	else if(Space_type=="Seat"){
+		seat = 0;
+		seat_num=0;
+	}
+
+}
+```
+This function is a function that is called when you try to return a spcae, and that is success.
+Initialize information.
+
+```
+void member::Empty(string Space_type, int hour)
+{
+	empty_time = seat_time;
+	seat_time = hour+1;
+}
+```
+This function is a function that is called when you try to empty a spcae, and that is success.
+Save seat_time(end of time) to empty_time and set seat_time hour+1.
+
+```
+void member::Comeback(string Space_type)
+{
+	seat_time = empty_time;
+	empty_time = 0;
+}
+```
+This function is a function that is called when you try to comeback at spcae, and that is success.
+Return what you did in Empty function.
+
+
 #### undergraduate class
 ```
 class undergraduate : public member
@@ -181,6 +259,149 @@ class undergraduate : public member
 ```
 The undergraduate class is inherited from the member class.
 
+### space.h
+#### space class
+```
+class space
+{
+	protected:
+		int start_Time;
+		int end_Time;
+		int return_Time;
+		int max_Num;
+		
+	public:
+		space();
+		int getST();
+		int getET();
+		int getRT();
+		int Borrow(string memName, int hour, int nom, int time, int lilmit);
+		int Return(string memName, int hour);
+		void reset();
+}			
+```
+
+```
+space::space()
+```
+Create and initialize a space of type `space`
+
+```
+int space::Borrow(string memName, int hour, int nom, int time, int lilmit)
+```
+- if borrow is successful, store information of space and member.
+- return Op code to library class.
+- library class get Op code and print it.
+
+```
+int space::Return(string memName, int hour)
+```
+- if return is successful, initialize the space.
+- return Op code to library class.
+- library class get Op code and print it.
+
+```
+void space::reset()
+```
+- intialize at 24 o'clock.
+
+
+#### study_room class
+```
+class study_room : public space
+{
+	protected:
+		string user;
+
+	public :
+		study_room() : space(){
+			start_Time = 9;
+			end_Time = 18;
+			return_Time = 0;
+			max_Num=6;
+			user="0";
+		}
+		void reset();
+		int Borrow(string memName, int hour, int nom, int time, int lilmit);
+		int Return(string memName, int hour);
+		
+};
+```
+The study_room class is inherited from the space class.
+
+#### seat class
+```
+class seat : public space
+{
+	protected:
+		int remain;	// maximum 50 seats
+		string memname[50];
+		int endtime[50];
+		int emptytime[50];
+
+	public :
+		seat() : space(){
+			start_Time = 0;
+			end_Time = 24;
+			remain = 0;
+			max_Num=1;
+			for(int i=0;i<50;i++){
+				memname[i] = "0";
+			}
+			for(int i=0;i<50;i++){
+				endtime[i]=0;
+			}
+			for(int i=0;i<50;i++){
+				emptytime[i]=0;
+			}	
+		}
+		void time_limit(int st, int et);
+		int Borrow(string memName, int hour, int nom, int time, int lilmit);
+		int Return(string memName, int hour);
+		int Empty(string memName, int hour);
+		int Comeback(string memName, int hour);
+		void reset();
+};
+
+```
+The seat class is inherited from the space class.
+
+```
+int seat::Empty(string memName, int hour)
+{
+	for(int i=0;i<50;i++){
+		if(memname[i]==memName){
+			if(hour <= endtime[i]){
+				emptytime[i]=endtime[i];
+				endtime[i]=hour+1;
+			       	return 0;
+			}
+		}
+	}
+	return 10;
+}
+```
+- This function is implemented when a member tries to leave his or her post.
+- if empty is successful, store endtime to emptytime and switch endtime to hour+1.
+
+```
+int seat::Comeback(string memName, int hour)
+{
+	for(int i=0;i<50;i++){
+		if(memname[i]==memName){
+			if(hour <= endtime[i]){
+				endtime[i]=emptytime[i];
+				emptytime[i]=0;
+			       	return 0;
+			}
+		}
+	}
+	return 10;
+}
+```
+- This function is implemented when a member tries to comeback.
+- if comeback is successful, restore when you did at the Empty function.
+
 Author
 --------------
-JuneKyu Park, Sungkyunkwan, Semiconductor System Engeering.
+JuneKyu Park, Sungkyunkwan Univ., Semiconductor System Engeering.
