@@ -70,7 +70,7 @@ library::library()
 		file_exist1=0;
 	}
 
-	if(fq = fopen("space1.dat", "r")){
+	if(fq = fopen("space.dat", "r")){
 		file_exist2=1;
 		for(i=0;i<8;i++){
 			fscanf(fq, "%s", buf3);

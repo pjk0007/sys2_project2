@@ -120,7 +120,6 @@ int seat::Empty(string memName, int hour)
 			}
 		}
 	}
-
 	return 10;
 }
 
